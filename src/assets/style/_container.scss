@@ -1,0 +1,6 @@
+.container {
+	margin-left: auto;
+	margin-right: auto;
+	width: min(calc(var(--container-width) + var(--container-padding) * 2), 100%);
+	padding: 0 var(--container-padding);
+}

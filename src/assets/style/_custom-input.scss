@@ -1,0 +1,59 @@
+.custom-input {
+	display: flex;
+	width: 100%;
+	gap: 8px;
+	$parent: &;
+
+	&__label {
+		order: 1;
+	}
+
+	&__helper {
+		order: 3;
+		transition: opacity var(--default-duration) ease;
+	}
+
+	%base {
+		order: 2;
+		outline: none;
+		transition: opacity var(--default-duration) ease;
+
+		&:disabled {
+			~ #{$parent}__helper {}
+
+			~ #{$parent}__label {}
+		}
+
+		&:not(:disabled) {
+			&:hover {}
+
+			&:focus {}
+		}
+	}
+
+	select {
+		@extend %base;
+	}
+
+	input {
+		@extend %base;
+
+		&::placeholder {}
+
+		&:not(:disabled) {
+			&:not(:focus):not(:hover):not(:placeholder-shown) {
+				&:valid {
+					~ #{$parent}__helper {}
+
+					~ #{$parent}__label {}
+				}
+
+				&:invalid {
+					~ #{$parent}__helper {}
+
+					~ #{$parent}__label {}
+				}
+			}
+		}
+	}
+}

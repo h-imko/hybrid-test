@@ -1,0 +1,48 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	outline: none;
+	text-decoration: none;
+
+	&::before,
+	&::after {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+		outline: none;
+		text-decoration: none;
+	}
+}
+
+img {
+	width: 100%;
+	height: auto;
+	max-height: 100%;
+	object-fit: contain;
+	object-position: center;
+	display: block;
+}
+
+html {
+	scroll-behavior: smooth;
+	display: grid;
+	min-height: 100%;
+}
+
+body {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+
+	&.noscroll {
+		overflow: hidden;
+		padding-right: var(--scrollbar-width, 0);
+	}
+}
+
+:root {
+	--header-margin: 24px;
+	--container-padding: 16px;
+	--container-width: 1280px;
+	--default-duration: .3s;
+}

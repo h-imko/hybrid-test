@@ -1,0 +1,20 @@
+.accordion {
+	&__controller {
+		display: none;
+	}
+
+	&__content {
+		min-height: 0;
+	}
+
+	&__wrapper {
+		display: grid;
+		grid-template-rows: 0fr;
+		overflow: hidden;
+		transition: grid-template-rows var(--default-duration) ease;
+	}
+
+	&__toggler:has(&__controller:checked) ~ &__wrapper {
+		grid-template-rows: 1fr;
+	}
+}
