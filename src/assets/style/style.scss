@@ -1,21 +1,73 @@
-@import "breakpoint";
-@import "breadcrumbs";
-@import "container";
-@import "color";
 @import "font";
-@import "mixins";
-@import "header";
-@import "button";
-@import "custom-checkbox";
-@import "custom-radio";
-@import "footer";
-@import "general";
-@import "icon";
-@import "splide";
-@import "dropzone";
-@import "custom-input";
-@import "article";
-@import "dialog";
-@import "custom-select";
-@import "accordion";
-@import "counter";
+
+.banner {
+	background-color: #ffd749;
+	color: rgb(68, 68, 68);
+	width: 320px;
+	user-select: none;
+	font-family: "TTWellingtons";
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	padding-top: 8px;
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 11px;
+		opacity: 0;
+	}
+
+	&__title {
+		font-size: 20px;
+		font-weight: 900;
+		line-height: 140%;
+		letter-spacing: 0%;
+		text-transform: uppercase;
+	}
+
+	&__count {
+		display: grid;
+
+		img {
+			display: block;
+			grid-column: 1;
+			grid-row: 1;
+			justify-self: flex-end;
+			height: 31px;
+
+			&[hidden] {
+				opacity: 0;
+			}
+		}
+	}
+
+	&__items {
+		display: flex;
+		padding-left: 28px;
+		padding-right: 13px;
+		margin-top: 13px;
+
+		svg {
+			g g {
+				opacity: 0;
+
+				&[data-checked] rect {
+					opacity: 0.2;
+				}
+			}
+		}
+	}
+
+	&__backpack {
+		margin-top: -64px;
+		margin-bottom: -125px;
+
+		img {
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+	}
+}

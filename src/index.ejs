@@ -5,7 +5,26 @@
 	<body>
 		<%- include('/header') %>
 		<main>
-			<h1>Hello world</h1>
+			<button class="play">play</button>
+			<div class="banner">
+				<div class="banner__header">
+					<div class="banner__title"><span>готовность</span></div>
+					<div class="banner__count">
+						<img src="/src/assets/static/img/0.svg">
+						<img src="/src/assets/static/img/1.svg">
+						<img src="/src/assets/static/img/2.svg">
+						<img src="/src/assets/static/img/3.svg">
+						<img src="/src/assets/static/img/4.svg">
+						<img src="/src/assets/static/img/5.svg">
+					</div>
+				</div>
+				<div class="banner__items">
+					<%- include('/items.svg.ejs') %>
+				</div>
+				<div class="banner__backpack">
+					<img src="/src/assets/static/img/12.webp">
+				</div>
+			</div>
 		</main>
 		<%- include('/footer') %>
 	</body>
