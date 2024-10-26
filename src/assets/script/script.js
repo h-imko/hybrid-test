@@ -6,7 +6,13 @@ document.addEventListener('DOMContentLoaded', function () {
 	const header = banner.querySelector(".banner__header")
 	const ready = banner.querySelector(".banner__ready")
 	const reset = banner.querySelector(".banner__reset")
-	const easing = "cubic-bezier(0.4, 0, 0.65, 1.7)"
+	const message = banner.querySelector(".banner__message")
+	const easing = "cubic-bezier(0.4, 0, 0.65, 2.2)"
+	const duration = {
+		fast: 220,
+		mid: 400,
+		slow: 600
+	}
 
 	function calcActive(active = 0) {
 		counts.forEach((img, index) => {
@@ -38,11 +44,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const backpackAnimationAppear = new Animation(new KeyframeEffect(backpack, [
 		{
-			transform: "scale(0.8)",
+			transform: "scale(0.82)",
 			opacity: 1
 		}
 	], {
-		duration: 800,
+		duration: duration.slow,
 		fill: "forwards",
 		endDelay: 200,
 		composite: "add",
@@ -54,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			transform: "translate(0, 43%)"
 		}
 	], {
-		duration: 800,
+		duration: duration.slow,
 		fill: "forwards",
 		composite: "accumulate",
 		easing: "ease"
@@ -66,16 +72,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		const itemAnimation = new Animation(new KeyframeEffect(item, [
 			{
-				transform: "scale(0.8)",
-				opacity: 0
-			},
-			{
 				transform: "scale(1)",
 				opacity: 1
 			}
 		], {
-			duration: 220,
-
+			duration: duration.fast,
 			fill: "both",
 			delay: index * 90,
 			easing
@@ -89,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			opacity: 1
 		}
 	], {
-		duration: 800,
+		duration: duration.slow,
 		fill: "both",
 		easing: "ease"
 	}))
@@ -99,28 +100,49 @@ document.addEventListener('DOMContentLoaded', function () {
 			opacity: 1
 		}
 	], {
-		duration: 400,
+		duration: duration.mid,
 		fill: "both",
 		easing: "ease"
 	}))
 
 	const resetAnimation = new Animation(new KeyframeEffect(reset, [
 		{
-			transform: "translateY(-36px)"
+			transform: "translateY(-65%)"
 		}
 	], {
-		duration: 400,
+		duration: duration.mid,
 		fill: "both",
 		easing: "ease"
 	}))
 
-	const backpackAnimationSlideBack = new Animation(new KeyframeEffect(backpack, [
+	const messageAnimationAppear = new Animation(new KeyframeEffect(message, [
 		{
-			transform: "translate(0, -20%) scale(0.9125)",
+			transform: "rotate(-7.31deg)",
 			opacity: 1
 		}
 	], {
-		duration: 400,
+		duration: duration.slow,
+		fill: "both",
+		easing
+	}))
+
+	const messageAnimationHide = new Animation(new KeyframeEffect(message, [
+		{
+			opacity: 0
+		}
+	], {
+		duration: duration.mid,
+		fill: "both",
+		easing
+	}))
+
+	const backpackAnimationSlideBack = new Animation(new KeyframeEffect(backpack, [
+		{
+			transform: "translate(0, -19%) scale(0.9125)",
+			opacity: 1
+		}
+	], {
+		duration: duration.mid,
 		iterations: 1,
 		fill: "forwards",
 		easing: "ease"
@@ -133,6 +155,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		headerAnimation.cancel()
 		resetAnimation.cancel()
 		readyAnimation.cancel()
+		messageAnimationHide.cancel()
+		messageAnimationAppear.cancel()
 		itemsAnimations.forEach(animation => {
 			animation.cancel()
 			animation.effect.target.removeAttribute("data-checked")
@@ -143,22 +167,25 @@ document.addEventListener('DOMContentLoaded', function () {
 	backpackAnimationAppear.persist()
 	backpackAnimationSlide.persist()
 	backpackAnimationSlideBack.persist()
+	messageAnimationAppear.persist()
 
 	backpackAnimationAppear.addEventListener("finish", () => {
 		backpackAnimationSlide.play()
+		messageAnimationAppear.play()
 		itemsAnimations.forEach(animation => {
 			animation.play()
 		})
 	})
 
 	banner.addEventListener("allActive", () => {
-		backpackAnimationSlideBack.play()
-		readyAnimation.play()
-		resetAnimation.play()
 		itemsAnimations.forEach(animation => {
 			animation.cancel()
 		})
 		headerAnimation.cancel()
+		backpackAnimationSlideBack.play()
+		readyAnimation.play()
+		resetAnimation.play()
+		messageAnimationHide.play()
 	})
 
 	document.querySelectorAll(".play, .banner__reset").forEach(btn => {
@@ -169,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		})
 	})
 
-	document.querySelectorAll(".replay").forEach(btn => {
+	document.querySelectorAll(".clear").forEach(btn => {
 		btn.addEventListener("click", () => {
 			cancel()
 		})

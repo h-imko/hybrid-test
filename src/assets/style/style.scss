@@ -1,13 +1,15 @@
 @import "font";
+$targetWidth: 320;
 
 @function relativeSize($etalon) {
-	@return calc($etalon / 320 * var(--cqw) * 100);
+	@return calc($etalon / $targetWidth * var(--cqw) * 100);
 }
 
 .banner {
 	background-color: #ffd749;
 	color: rgb(68, 68, 68);
-	width: 320px;
+	max-width: calc($targetWidth * 1px);
+	width: 100%;
 	user-select: none;
 	font-family: "TTWellingtons";
 	display: flex;
@@ -21,7 +23,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 11px;
+		gap: relativeSize(11);
 		opacity: 0;
 	}
 
@@ -58,6 +60,7 @@
 		svg {
 			g g {
 				opacity: 0;
+				transform: scale(0.8);
 
 				rect {
 					transition: opacity ease .3s;
@@ -97,6 +100,7 @@
 		position: absolute;
 		bottom: 0;
 		transform: translateY(100%);
+		margin-right: 11px;
 		align-self: center;
 		filter: drop-shadow(0 relativeSize(4) relativeSize(4) rgba(0, 0, 0, 0.25));
 		text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
@@ -113,5 +117,37 @@
 		align-self: center;
 		opacity: 0;
 		pointer-events: none;
+	}
+
+	&__message {
+		position: absolute;
+		padding: relativeSize(16) 0 relativeSize(24) relativeSize(18);
+		font-size: relativeSize(20);
+		font-weight: 700;
+		text-align: center;
+		right: relativeSize(10);
+		bottom: relativeSize(85);
+		transform-origin: bottom right;
+		opacity: 0;
+
+		&__small {
+			font-size: relativeSize(15);
+		}
+
+		&__last {
+			display: block;
+		}
+
+		&__decorator {
+			transform: rotate(7.31deg);
+			filter: drop-shadow(0 relativeSize(15) relativeSize(15) rgba(80, 80, 80, 0.2));
+			position: absolute;
+			height: 100%;
+			top: 0;
+			left: 0;
+			width: auto;
+			z-index: -1;
+			object-fit: contain;
+		}
 	}
 }
