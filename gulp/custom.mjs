@@ -44,7 +44,7 @@ function sharpWebp() {
 				})
 				.webp({
 					effort: 6,
-					quality: 80
+					lossless: true
 				})
 				.toBuffer((error, buffer) => {
 					if (error) {

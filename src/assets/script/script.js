@@ -1,13 +1,24 @@
 document.addEventListener('DOMContentLoaded', function () {
-	const counts = document.querySelectorAll(".banner__count img")
-	const items = [...document.querySelectorAll(".banner__items svg g g")]
-	const backpack = document.querySelector(".banner__backpack")
-	const header = document.querySelector(".banner__header")
-	const easing = "cubic-bezier(0.4, 0, 0.65, 2)"
+	const banner = document.querySelector(".banner")
+	const counts = banner.querySelectorAll(".banner__count img")
+	const items = [...banner.querySelectorAll(".banner__items svg g g")]
+	const backpack = banner.querySelector(".banner__backpack")
+	const header = banner.querySelector(".banner__header")
+	const ready = banner.querySelector(".banner__ready")
+	const reset = banner.querySelector(".banner__reset")
+	const easing = "cubic-bezier(0.4, 0, 0.65, 1.7)"
 
-	counts.forEach((img, index) => {
-		img.toggleAttribute("hidden", index != 0)
-	})
+	function calcActive(active = 0) {
+		counts.forEach((img, index) => {
+			img.toggleAttribute("hidden", index != active)
+		})
+	}
+
+	new ResizeObserver(entries => {
+		banner.style.setProperty("--cqw", `${entries.at(0).contentRect.width / 100}px`)
+	}).observe(banner)
+
+	calcActive()
 
 	items.forEach(item => {
 		item.addEventListener("click", () => {
@@ -17,36 +28,35 @@ document.addEventListener('DOMContentLoaded', function () {
 				return accumulator += item.hasAttribute("data-checked")
 			}, 0)
 
-			counts.forEach((img, index) => {
-				img.toggleAttribute("hidden", index != active)
-			})
+			if (active == items.length) {
+				banner.dispatchEvent(new CustomEvent("allActive"))
+			}
+
+			calcActive(active)
 		})
 	})
 
 	const backpackAnimationAppear = new Animation(new KeyframeEffect(backpack, [
 		{
-			transform: "translateY(-170px) translateX(-6px) rotate(-11deg)",
-			opacity: 0
-		}, {
-			transform: "translateY(-170px) translateX(-6px) scale(0.8) rotate(-11deg)",
+			transform: "scale(0.8)",
 			opacity: 1
 		}
 	], {
 		duration: 800,
-		iterations: 1,
-		fill: "both",
+		fill: "forwards",
 		endDelay: 200,
+		composite: "add",
 		easing
 	}))
 
 	const backpackAnimationSlide = new Animation(new KeyframeEffect(backpack, [
 		{
-			transform: "scale(0.8) translateX(-6px) rotate(-11deg)",
+			transform: "translate(0, 43%)"
 		}
 	], {
 		duration: 800,
-		iterations: 1,
-		fill: "both",
+		fill: "forwards",
+		composite: "accumulate",
 		easing: "ease"
 	}))
 
@@ -65,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		], {
 			duration: 220,
-			iterations: 1,
+
 			fill: "both",
 			delay: index * 90,
 			easing
@@ -80,9 +90,59 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	], {
 		duration: 800,
-		iterations: 1,
 		fill: "both",
+		easing: "ease"
 	}))
+
+	const readyAnimation = new Animation(new KeyframeEffect(ready, [
+		{
+			opacity: 1
+		}
+	], {
+		duration: 400,
+		fill: "both",
+		easing: "ease"
+	}))
+
+	const resetAnimation = new Animation(new KeyframeEffect(reset, [
+		{
+			transform: "translateY(-36px)"
+		}
+	], {
+		duration: 400,
+		fill: "both",
+		easing: "ease"
+	}))
+
+	const backpackAnimationSlideBack = new Animation(new KeyframeEffect(backpack, [
+		{
+			transform: "translate(0, -20%) scale(0.9125)",
+			opacity: 1
+		}
+	], {
+		duration: 400,
+		iterations: 1,
+		fill: "forwards",
+		easing: "ease"
+	}))
+
+	function cancel() {
+		backpackAnimationSlideBack.cancel()
+		backpackAnimationSlide.cancel()
+		backpackAnimationAppear.cancel()
+		headerAnimation.cancel()
+		resetAnimation.cancel()
+		readyAnimation.cancel()
+		itemsAnimations.forEach(animation => {
+			animation.cancel()
+			animation.effect.target.removeAttribute("data-checked")
+			calcActive()
+		})
+	}
+
+	backpackAnimationAppear.persist()
+	backpackAnimationSlide.persist()
+	backpackAnimationSlideBack.persist()
 
 	backpackAnimationAppear.addEventListener("finish", () => {
 		backpackAnimationSlide.play()
@@ -91,14 +151,27 @@ document.addEventListener('DOMContentLoaded', function () {
 		})
 	})
 
-	document.querySelector(".play").addEventListener("click", () => {
-		backpackAnimationAppear.cancel()
-		backpackAnimationSlide.cancel()
-		headerAnimation.cancel()
+	banner.addEventListener("allActive", () => {
+		backpackAnimationSlideBack.play()
+		readyAnimation.play()
+		resetAnimation.play()
 		itemsAnimations.forEach(animation => {
 			animation.cancel()
 		})
-		backpackAnimationAppear.play()
-		headerAnimation.play()
+		headerAnimation.cancel()
+	})
+
+	document.querySelectorAll(".play, .banner__reset").forEach(btn => {
+		btn.addEventListener("click", () => {
+			cancel()
+			backpackAnimationAppear.play()
+			headerAnimation.play()
+		})
+	})
+
+	document.querySelectorAll(".replay").forEach(btn => {
+		btn.addEventListener("click", () => {
+			cancel()
+		})
 	})
 })
