@@ -56,7 +56,7 @@ function css() {
 				embedded: true,
 				style: "compressed",
 				precompile(source) {
-					return source.replaceAll("/src/", "/")
+					return source.replaceAll("/src/", "../../")
 				},
 				async transform(source, resolveDir, filePath) {
 					const { css } = await postcss([autoprefixer]).process(source, {
