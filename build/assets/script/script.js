@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const ready = banner.querySelector(".banner__ready");
   const reset = banner.querySelector(".banner__reset");
   const message = banner.querySelector(".banner__message");
+  const blicks = [...banner.querySelectorAll(".banner__backpack__decorator")];
   const easing = "cubic-bezier(0.4, 0, 0.65, 2.2)";
   const duration = {
     fast: 220,
@@ -56,6 +57,18 @@ document.addEventListener("DOMContentLoaded", function() {
     composite: "accumulate",
     easing: "ease"
   }));
+  const blickAnimations = blicks.map((blick) => {
+    return new Animation(new KeyframeEffect(blick, [
+      {
+        opacity: 1
+      }
+    ], {
+      duration: duration.slow,
+      fill: "forwards",
+      composite: "accumulate",
+      easing: "ease"
+    }));
+  });
   const itemsAnimations = items.map((item, index) => {
     const rect = item.getBBox();
     item.style.setProperty("transform-origin", `${rect.x + rect.width / 2}px ${rect.y + rect.height / 2}px`);
@@ -143,20 +156,28 @@ document.addEventListener("DOMContentLoaded", function() {
       animation.effect.target.removeAttribute("data-checked");
       calcActive();
     });
+    blickAnimations.forEach((animation) => {
+      animation.cancel();
+    });
   }
   backpackAnimationAppear.persist();
   backpackAnimationSlide.persist();
   backpackAnimationSlideBack.persist();
-  messageAnimationAppear.persist();
   backpackAnimationAppear.addEventListener("finish", () => {
     backpackAnimationSlide.play();
     messageAnimationAppear.play();
     itemsAnimations.forEach((animation) => {
       animation.play();
     });
+    blickAnimations.forEach((animation) => {
+      animation.play();
+    });
   });
   banner.addEventListener("allActive", () => {
     itemsAnimations.forEach((animation) => {
+      animation.cancel();
+    });
+    blickAnimations.forEach((animation) => {
       animation.cancel();
     });
     headerAnimation.cancel();
